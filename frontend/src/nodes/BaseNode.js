@@ -1,45 +1,115 @@
-// BaseNode.js
-// Shared foundation for all node types. Configure via props rather than copying boilerplate.
-
 import { useState } from 'react';
-import { Handle } from 'reactflow';
+import { Handle, useReactFlow } from 'reactflow';
 
 // handles: [{ suffix, type, position, style? }]
-//   suffix  — appended to `id` to form the handle id (e.g. 'value' → `${id}-value`)
-//   type    — 'source' | 'target'
-//   position — Position.Left | Position.Right | ...
-//   style   — optional inline style overrides (e.g. { top: '33%' })
-//
-// fields: [{ key, label, type, defaultValue, options? }]
-//   key          — matches data[key]; used for initial state
-//   label        — displayed before the control
-//   type         — 'text' | 'select'
-//   defaultValue — value or function (id, data) => value
-//   options      — [{ value, label }] required when type === 'select'
+// fields:  [{ key, label, type, defaultValue, options?, placeholder?, rows?, isPill? }]
+//   types: 'text' | 'select' | 'textarea' | 'toggle' | (with isPill:true → read-only pill display)
 
-const NODE_STYLE = { width: 200, height: 80, border: '1px solid black' };
-
-export const BaseNode = ({ id, data, label, handles = [], fields = [], children }) => {
+export const BaseNode = ({
+  id,
+  data,
+  label,
+  icon,
+  description,
+  handles = [],
+  fields = [],
+  children,
+  width = 260,
+}) => {
   const initialState = Object.fromEntries(
     fields.map((f) => {
-      const fallback = typeof f.defaultValue === 'function'
-        ? f.defaultValue(id, data)
-        : f.defaultValue;
+      const fallback =
+        typeof f.defaultValue === 'function' ? f.defaultValue(id, data) : f.defaultValue;
       return [f.key, data?.[f.key] ?? fallback];
     })
   );
 
   const [fieldValues, setFieldValues] = useState(initialState);
+  const { deleteElements } = useReactFlow();
+  const onDelete = () => deleteElements({ nodes: [{ id }] });
 
-  const handleChange = (key) => (e) => {
+  const handleChange = (key) => (e) =>
     setFieldValues((prev) => ({ ...prev, [key]: e.target.value }));
-  };
+
+  const handleToggle = (key) => () =>
+    setFieldValues((prev) => ({ ...prev, [key]: !prev[key] }));
 
   const targetHandles = handles.filter((h) => h.type === 'target');
   const sourceHandles = handles.filter((h) => h.type === 'source');
 
+  const renderField = (field) => {
+    if (field.isPill) {
+      return (
+        <div key={field.key} className="vs-name-pill">
+          {fieldValues[field.key]}
+        </div>
+      );
+    }
+
+    if (field.type === 'toggle') {
+      return (
+        <div key={field.key} className="vs-toggle-row">
+          <span className="vs-toggle-label">{field.label}</span>
+          <div className="vs-toggle-right">
+            <span className="vs-toggle-value">
+              {fieldValues[field.key] ? 'Yes' : 'No'}
+            </span>
+            <button
+              type="button"
+              className={`vs-toggle${fieldValues[field.key] ? ' vs-toggle--on' : ''}`}
+              onClick={handleToggle(field.key)}
+            >
+              <span className="vs-toggle-thumb" />
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div key={field.key} className="vs-field">
+        <div className="vs-field-header">
+          <span className="vs-field-label">{field.label}</span>
+          {field.type === 'select' && (
+            <span className="vs-field-badge">Dropdown</span>
+          )}
+        </div>
+
+        {field.type === 'select' ? (
+          <select
+            className="vs-select nodrag"
+            value={fieldValues[field.key]}
+            onChange={handleChange(field.key)}
+          >
+            {field.options.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        ) : field.type === 'textarea' ? (
+          <textarea
+            className="vs-textarea nodrag"
+            value={fieldValues[field.key]}
+            onChange={handleChange(field.key)}
+            placeholder={field.placeholder}
+            rows={field.rows || 3}
+          />
+        ) : (
+          <input
+            className="vs-input nodrag"
+            type="text"
+            value={fieldValues[field.key]}
+            onChange={handleChange(field.key)}
+            placeholder={field.placeholder}
+          />
+        )}
+      </div>
+    );
+  };
+
   return (
-    <div style={NODE_STYLE}>
+    <div className="vs-node" style={{ width }}>
       {targetHandles.map((h) => (
         <Handle
           key={h.suffix}
@@ -49,30 +119,26 @@ export const BaseNode = ({ id, data, label, handles = [], fields = [], children 
           style={h.style}
         />
       ))}
-      <div>
-        <span>{label}</span>
+
+      <div className="vs-node-header">
+        <div className="vs-node-header-left">
+          {icon && <span className="vs-node-icon">{icon}</span>}
+          <span className="vs-node-title">{label}</span>
+        </div>
+        <div className="vs-node-actions">
+          <button className="vs-node-action-btn" title="Remove node" onClick={onDelete}>
+            <CloseIcon />
+          </button>
+        </div>
       </div>
-      <div>
-        {fields.map((field) => (
-          <label key={field.key}>
-            {field.label}:
-            {field.type === 'select' ? (
-              <select value={fieldValues[field.key]} onChange={handleChange(field.key)}>
-                {field.options.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </select>
-            ) : (
-              <input
-                type="text"
-                value={fieldValues[field.key]}
-                onChange={handleChange(field.key)}
-              />
-            )}
-          </label>
-        ))}
+
+      {description && <div className="vs-node-subtitle">{description}</div>}
+
+      <div className="vs-node-body">
+        {fields.map(renderField)}
         {children}
       </div>
+
       {sourceHandles.map((h) => (
         <Handle
           key={h.suffix}
@@ -85,3 +151,9 @@ export const BaseNode = ({ id, data, label, handles = [], fields = [], children 
     </div>
   );
 };
+
+const CloseIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+    <path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+  </svg>
+);
