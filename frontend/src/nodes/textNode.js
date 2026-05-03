@@ -12,6 +12,11 @@ const getNodeName = (node) => {
     case 'customOutput': return node.id.replace('customOutput-', 'output_');
     case 'llm':          return node.id.replace('llm-', 'llm_');
     case 'text':         return node.id.replace('text-', 'text_');
+    case 'codeExecution':return node.id.replace('codeExecution-', 'code_execution_');
+    case 'api':          return node.id.replace('api-', 'api_');
+    case 'urlScraper':   return node.id.replace('urlScraper-', 'url_loader_');
+    case 'fetchStock':   return node.id.replace('fetchStock-', 'fetch_stock_prices_');
+    case 'wait':         return node.id.replace('wait-', 'wait_node_');
     default:             return node.id;
   }
 };
@@ -19,10 +24,15 @@ const getNodeName = (node) => {
 // The source handle id that each connectable node type exposes
 const getSourceHandle = (node) => {
   switch (node.type) {
-    case 'customInput': return `${node.id}-value`;
-    case 'llm':         return `${node.id}-response`;
-    case 'text':        return `${node.id}-output`;
-    default:            return null;
+    case 'customInput':   return `${node.id}-value`;
+    case 'llm':           return `${node.id}-response`;
+    case 'text':
+    case 'codeExecution':
+    case 'api':
+    case 'urlScraper':
+    case 'fetchStock':
+    case 'wait':          return `${node.id}-output`;
+    default:              return null;
   }
 };
 

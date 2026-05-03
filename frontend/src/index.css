@@ -436,3 +436,373 @@ body {
 .react-flow__attribution {
   display: none;
 }
+
+/* ── Pipeline result modal ─────────────────────── */
+.vs-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 27, 75, 0.35);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.vs-modal {
+  background: white;
+  border: 1.5px solid var(--vs-border);
+  border-radius: 14px;
+  width: 360px;
+  box-shadow: 0 20px 60px rgba(99, 102, 241, 0.2);
+  overflow: hidden;
+}
+
+.vs-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid #edeef8;
+}
+
+.vs-modal-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--vs-header-text);
+  letter-spacing: -0.2px;
+}
+
+.vs-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 4px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  transition: background 0.12s, color 0.12s;
+}
+
+.vs-modal-close:hover {
+  background: var(--vs-primary-light);
+  color: var(--vs-primary);
+}
+
+.vs-modal-body {
+  padding: 18px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.vs-modal-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #b91c1c;
+  font-size: 13px;
+  padding: 12px;
+  line-height: 1.45;
+}
+
+/* ── Stat cards ─────────────────────────────────── */
+.vs-stat-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.vs-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: var(--vs-pill-bg);
+  border-radius: 10px;
+  padding: 14px 10px;
+}
+
+.vs-stat-icon {
+  color: var(--vs-primary);
+  margin-bottom: 2px;
+}
+
+.vs-stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--vs-header-text);
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+.vs-stat-label {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--vs-subtitle);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── DAG badge ──────────────────────────────────── */
+.vs-dag-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: 10px;
+  padding: 13px 14px;
+  border: 1.5px solid;
+}
+
+.vs-dag-badge--yes {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.vs-dag-badge--no {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #991b1b;
+}
+
+.vs-dag-badge svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.vs-dag-badge strong {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.vs-dag-badge p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  opacity: 0.85;
+}
+
+/* ── Submit button loading state ────────────────── */
+.vs-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ── Required field marker ─────────────────────── */
+.vs-required {
+  color: #ef4444;
+  margin-left: 2px;
+}
+
+.vs-input--error {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.12) !important;
+}
+
+/* ── Error banner ──────────────────────────────── */
+.vs-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--vs-radius-sm);
+  color: #ef4444;
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 7px 10px;
+}
+
+/* ── Tab groups (API / Code Execution) ─────────── */
+.vs-tab-group {
+  display: flex;
+  gap: 2px;
+}
+
+.vs-tab-btn {
+  background: none;
+  border: 1px solid var(--vs-border);
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--vs-subtitle);
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.vs-tab-btn--active {
+  background: var(--vs-primary);
+  border-color: var(--vs-primary);
+  color: white;
+}
+
+/* ── Generic section wrapper ───────────────────── */
+.vs-code-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 0 0;
+  border-top: 1px solid #edeef8;
+}
+
+.vs-io-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── Inputs / Outputs table ────────────────────── */
+.vs-io-col-header {
+  display: grid;
+  grid-template-columns: 1fr 90px 1fr 20px;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--vs-subtitle);
+  padding: 0 2px;
+}
+
+.vs-io-row {
+  display: grid;
+  grid-template-columns: 1fr 90px 1fr 20px;
+  gap: 4px;
+  align-items: center;
+}
+
+.vs-io-row .vs-input,
+.vs-io-row .vs-select {
+  font-size: 11.5px;
+  padding: 5px 7px;
+}
+
+/* ── API tabs ───────────────────────────────────── */
+.vs-api-tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid #edeef8;
+  padding-bottom: 6px;
+}
+
+.vs-api-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--vs-subtitle);
+  padding: 4px 10px;
+  cursor: pointer;
+  border-radius: 4px 4px 0 0;
+  transition: color 0.12s, border-color 0.12s;
+  margin-bottom: -7px;
+}
+
+.vs-api-tab--active {
+  color: var(--vs-primary);
+  border-bottom-color: var(--vs-primary);
+}
+
+/* ── Key / Value rows ───────────────────────────── */
+.vs-kv-section {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.vs-kv-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 20px;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--vs-subtitle);
+  align-items: center;
+}
+
+.vs-kv-header span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.vs-kv-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 20px;
+  gap: 6px;
+  align-items: center;
+}
+
+.vs-kv-row .vs-input {
+  font-size: 11.5px;
+  padding: 5px 8px;
+}
+
+.vs-kv-del {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  opacity: 0.7;
+  transition: opacity 0.1s;
+}
+
+.vs-kv-del:hover { opacity: 1; }
+
+/* ── Add button ─────────────────────────────────── */
+.vs-add-btn {
+  background: none;
+  border: 1.5px dashed var(--vs-border);
+  border-radius: var(--vs-radius-sm);
+  color: var(--vs-primary);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px;
+  width: 100%;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+  text-align: center;
+}
+
+.vs-add-btn:hover {
+  background: var(--vs-primary-light);
+  border-color: var(--vs-primary);
+}
+
+/* ── Code editor ─────────────────────────────────── */
+.vs-code-editor-wrap {
+  border: 1px solid var(--vs-input-border);
+  border-radius: var(--vs-radius-sm);
+  overflow: hidden;
+  background: #f8f9fe;
+}
+
+.vs-code-lang-badge {
+  background: #e8eaf6;
+  color: var(--vs-primary-dark);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-bottom: 1px solid var(--vs-border);
+}
+
+.vs-code-editor {
+  background: #f8f9fe !important;
+  counter-reset: line;
+}
+
+/* Prism overrides to match the design */
+.token.keyword   { color: #7c3aed; }
+.token.string    { color: #b45309; }
+.token.comment   { color: #9ca3af; font-style: italic; }
+.token.function  { color: #1d4ed8; }
+.token.number    { color: #065f46; }

@@ -2,20 +2,30 @@ import { useState, useRef, useCallback } from 'react';
 import ReactFlow, { Controls, Background, MiniMap, BackgroundVariant } from 'reactflow';
 import { useStore } from './store';
 import { shallow } from 'zustand/shallow';
-import { InputNode } from './nodes/inputNode';
-import { LLMNode } from './nodes/llmNode';
-import { OutputNode } from './nodes/outputNode';
-import { TextNode } from './nodes/textNode';
+import { InputNode }         from './nodes/inputNode';
+import { LLMNode }           from './nodes/llmNode';
+import { OutputNode }        from './nodes/outputNode';
+import { TextNode }          from './nodes/textNode';
+import { CodeExecutionNode } from './nodes/codeExecutionNode';
+import { ApiNode }           from './nodes/apiNode';
+import { URLScraperNode }    from './nodes/urlScraperNode';
+import { FetchStockNode }    from './nodes/fetchStockNode';
+import { WaitNode }          from './nodes/waitNode';
 
 import 'reactflow/dist/style.css';
 
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
 const nodeTypes = {
-  customInput: InputNode,
-  llm: LLMNode,
-  customOutput: OutputNode,
-  text: TextNode,
+  customInput:    InputNode,
+  llm:            LLMNode,
+  customOutput:   OutputNode,
+  text:           TextNode,
+  codeExecution:  CodeExecutionNode,
+  api:            ApiNode,
+  urlScraper:     URLScraperNode,
+  fetchStock:     FetchStockNode,
+  wait:           WaitNode,
 };
 
 const selector = (state) => ({
