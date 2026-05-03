@@ -386,6 +386,26 @@ body {
   transform: translateX(15px);
 }
 
+/* ── Variable tags (Text node) ─────────────────── */
+.vs-var-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.vs-var-tag {
+  display: inline-flex;
+  align-items: center;
+  background: var(--vs-primary-light);
+  color: var(--vs-primary-dark);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid #c7d2fe;
+  font-family: 'Courier New', monospace;
+}
+
 /* ── ReactFlow handles ─────────────────────────── */
 .react-flow__handle {
   width: 13px !important;

@@ -12,9 +12,12 @@ export const BaseNode = ({
   icon,
   description,
   handles = [],
+  dynamicHandles = [],   // variable / computed handles from the node wrapper
   fields = [],
   children,
   width = 260,
+  onFieldChange,         // (key, value) => void — called after internal state update
+  fieldRefs = {},        // { [fieldKey]: React ref } — attached to the DOM element
 }) => {
   const initialState = Object.fromEntries(
     fields.map((f) => {
@@ -28,14 +31,18 @@ export const BaseNode = ({
   const { deleteElements } = useReactFlow();
   const onDelete = () => deleteElements({ nodes: [{ id }] });
 
-  const handleChange = (key) => (e) =>
-    setFieldValues((prev) => ({ ...prev, [key]: e.target.value }));
+  const handleChange = (key) => (e) => {
+    const value = e.target.value;
+    setFieldValues((prev) => ({ ...prev, [key]: value }));
+    onFieldChange?.(key, value);
+  };
 
   const handleToggle = (key) => () =>
     setFieldValues((prev) => ({ ...prev, [key]: !prev[key] }));
 
-  const targetHandles = handles.filter((h) => h.type === 'target');
-  const sourceHandles = handles.filter((h) => h.type === 'source');
+  const allHandles = [...handles, ...dynamicHandles];
+  const targetHandles = allHandles.filter((h) => h.type === 'target');
+  const sourceHandles = allHandles.filter((h) => h.type === 'source');
 
   const renderField = (field) => {
     if (field.isPill) {
@@ -80,6 +87,7 @@ export const BaseNode = ({
             className="vs-select nodrag"
             value={fieldValues[field.key]}
             onChange={handleChange(field.key)}
+            style={field.style}
           >
             {field.options.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -89,19 +97,23 @@ export const BaseNode = ({
           </select>
         ) : field.type === 'textarea' ? (
           <textarea
-            className="vs-textarea nodrag"
+            ref={fieldRefs[field.key]}
+            className="vs-textarea nodrag nowheel"
             value={fieldValues[field.key]}
             onChange={handleChange(field.key)}
             placeholder={field.placeholder}
             rows={field.rows || 3}
+            style={field.style}
           />
         ) : (
           <input
+            ref={fieldRefs[field.key]}
             className="vs-input nodrag"
             type="text"
             value={fieldValues[field.key]}
             onChange={handleChange(field.key)}
             placeholder={field.placeholder}
+            style={field.style}
           />
         )}
       </div>
